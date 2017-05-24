@@ -253,4 +253,8 @@ public class CubeGestureListener : MonoBehaviour, KinectGestures.GestureListener
 		}
 	}
 
+    public bool GestureCompleted(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint, Vector3 screenPos)
+    {
+        throw new NotImplementedException();
+    }
 }

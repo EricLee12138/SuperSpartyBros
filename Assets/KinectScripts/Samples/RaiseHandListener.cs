@@ -140,4 +140,8 @@ public class RaiseHandListener : MonoBehaviour, KinectGestures.GestureListenerIn
 		instance = this;
 	}
 
+    public bool GestureCompleted(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint, Vector3 screenPos)
+    {
+        throw new NotImplementedException();
+    }
 }

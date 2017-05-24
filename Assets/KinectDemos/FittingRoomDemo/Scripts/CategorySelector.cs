@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class CategorySelector : MonoBehaviour, KinectGestures.GestureListenerInterface
 {
@@ -270,4 +271,9 @@ public class CategorySelector : MonoBehaviour, KinectGestures.GestureListenerInt
 
 		return true;
 	}
+
+    public bool GestureCompleted(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint, Vector3 screenPos)
+    {
+        throw new NotImplementedException();
+    }
 }

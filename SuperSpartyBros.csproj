@@ -184,6 +184,7 @@
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\EnemyStun.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\GestureListener.cs" />
     <Compile Include="Assets\Scripts\KinectV2Controller.cs" />
     <Compile Include="Assets\Scripts\PlatformMover.cs" />
     <Compile Include="Assets\Scripts\PlayerPrefManager.cs" />

@@ -141,5 +141,9 @@ public class SimpleGestureListener : MonoBehaviour, KinectGestures.GestureListen
 			Debug.Log("Forced progress to end.");
 		}
 	}
-	
+
+    public bool GestureCompleted(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint, Vector3 screenPos)
+    {
+        throw new NotImplementedException();
+    }
 }

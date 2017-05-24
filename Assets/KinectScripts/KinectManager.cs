@@ -1975,13 +1975,12 @@ public class KinectManager : MonoBehaviour
 	}
 
 
-	// KinectManager's Internal Methods
+    // KinectManager's Internal Methods
 
 
-	void Awake()
-	{
-        /**********************************************************************************************************************/
-        /**********************************************************************************************************************/
+    void Awake()
+    {
+        #region LIRONGJIA
         // get a reference to the components we are going to be changing and store a reference for efficiency purposes
         _transform = GetComponent<Transform>();
 
@@ -2006,60 +2005,60 @@ public class KinectManager : MonoBehaviour
 
         // determine the platform's specified layer
         _platformLayer = LayerMask.NameToLayer("Platform");
-        /**********************************************************************************************************************/
-        /**********************************************************************************************************************/
+
+        #endregion LIRONGJIA
 
         // set the singleton instance
         instance = this;
 
-		try
-		{
-			bool bOnceRestarted = false;
-			if(System.IO.File.Exists("KMrestart.txt"))
-			{
-				bOnceRestarted = true;
+        try
+        {
+            bool bOnceRestarted = false;
+            if (System.IO.File.Exists("KMrestart.txt"))
+            {
+                bOnceRestarted = true;
 
-				try 
-				{
-					System.IO.File.Delete("KMrestart.txt");
-				} 
-				catch(Exception ex)
-				{
-					Debug.LogError("Error deleting KMrestart.txt");
-					Debug.LogError(ex.ToString());
-				}
-			}
+                try
+                {
+                    System.IO.File.Delete("KMrestart.txt");
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError("Error deleting KMrestart.txt");
+                    Debug.LogError(ex.ToString());
+                }
+            }
 
-			// init the available sensor interfaces
-			bool bNeedRestart = false;
-			sensorInterfaces = KinectInterop.InitSensorInterfaces(bOnceRestarted, ref bNeedRestart);
+            // init the available sensor interfaces
+            bool bNeedRestart = false;
+            sensorInterfaces = KinectInterop.InitSensorInterfaces(bOnceRestarted, ref bNeedRestart);
 
-			if(bNeedRestart)
-			{
-				System.IO.File.WriteAllText("KMrestart.txt", "Restarting level...");
-				KinectInterop.RestartLevel(gameObject, "KM");
-				return;
-			}
-			else
-			{
-				// set graphics shader level
-				KinectInterop.SetGraphicsShaderLevel(SystemInfo.graphicsShaderLevel);
+            if (bNeedRestart)
+            {
+                System.IO.File.WriteAllText("KMrestart.txt", "Restarting level...");
+                KinectInterop.RestartLevel(gameObject, "KM");
+                return;
+            }
+            else
+            {
+                // set graphics shader level
+                KinectInterop.SetGraphicsShaderLevel(SystemInfo.graphicsShaderLevel);
 
-				// start the sensor
-				StartKinect();
-			}
-		} 
-		catch (Exception ex) 
-		{
-			Debug.LogError(ex.ToString());
-			
-			if(calibrationText != null)
-			{
-				calibrationText.text = ex.Message;
-			}
-		}
+                // start the sensor
+                StartKinect();
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError(ex.ToString());
 
-	}
+            if (calibrationText != null)
+            {
+                calibrationText.text = ex.Message;
+            }
+        }
+
+    }
 
 	void StartKinect() 
 	{
@@ -2483,113 +2482,89 @@ public class KinectManager : MonoBehaviour
 			}
 		}
 	}
-	
-	void Update() 
-	{
+
+    void Update()
+    {
         if (kinectInitialized)
-		{
-			if(!kinectReaderRunning)
-			{
-				// update Kinect streams and structures
-				UpdateKinectStreams();
-			}
+        {
+            if (!kinectReaderRunning)
+            {
+                // update Kinect streams and structures
+                UpdateKinectStreams();
+            }
 
-			// process the data from Kinect streams
-			ProcessKinectStreams();
+            // process the data from Kinect streams
+            ProcessKinectStreams();
 
-			// update the avatars
-			if(!lateUpdateAvatars)
-			{
-				foreach (AvatarController controller in avatarControllers)
-				{
-					//int userIndex = controller ? controller.playerIndex : -1;
-					Int64 userId = controller ? controller.playerId : 0;
-					
-					//if((userIndex >= 0) && (userIndex < alUserIds.Count))
-					if(userId != 0 && dictUserIdToIndex.ContainsKey(userId))
-					{
-						//Int64 userId = alUserIds[userIndex];
-						controller.UpdateAvatar(userId);
-					}
-				}
-			}
+            // update the avatars
+            if (!lateUpdateAvatars)
+            {
+                foreach (AvatarController controller in avatarControllers)
+                {
+                    //int userIndex = controller ? controller.playerIndex : -1;
+                    Int64 userId = controller ? controller.playerId : 0;
 
-			// check for gestures
-			foreach(Int64 userId in alUserIds)
-			{
-				if(!playerGesturesData.ContainsKey(userId))
-					continue;
+                    //if((userIndex >= 0) && (userIndex < alUserIds.Count))
+                    if (userId != 0 && dictUserIdToIndex.ContainsKey(userId))
+                    {
+                        //Int64 userId = alUserIds[userIndex];
+                        controller.UpdateAvatar(userId);
+                    }
+                }
+            }
 
-				// Check for player's gestures
-				CheckForGestures(userId);
-				
-				// Check for complete gestures
-				List<KinectGestures.GestureData> gesturesData = playerGesturesData[userId];
-				int userIndex = GetUserIndexById(userId);
-				
-				foreach(KinectGestures.GestureData gestureData in gesturesData)
-				{
-					if(gestureData.complete)
-					{
-//						if(gestureData.gesture == KinectGestures.Gestures.Click)
-//						{
-//							if(controlMouseCursor)
-//							{
-//								MouseControl.MouseClick();
-//							}
-//						}
-				
-						foreach(KinectGestures.GestureListenerInterface listener in gestureListeners)
-						{
-							if(listener != null && listener.GestureCompleted(userId, userIndex, gestureData.gesture, (KinectInterop.JointType)gestureData.joint, gestureData.screenPos))
-							{
-								ResetPlayerGestures(userId);
-							}
-						}
-					}
-					else if(gestureData.cancelled)
-					{
-						foreach(KinectGestures.GestureListenerInterface listener in gestureListeners)
-						{
-							if(listener != null && listener.GestureCancelled(userId, userIndex, gestureData.gesture, (KinectInterop.JointType)gestureData.joint))
-							{
-								ResetGesture(userId, gestureData.gesture);
-							}
-						}
-					}
-					else if(gestureData.progress >= 0.1f)
-					{
-//						if((gestureData.gesture == KinectGestures.Gestures.RightHandCursor || 
-//						    gestureData.gesture == KinectGestures.Gestures.LeftHandCursor) && 
-//						   gestureData.progress >= 0.5f)
-//						{
-//							if(handCursor != null)
-//							{
-//								handCursor.transform.position = Vector3.Lerp(handCursor.transform.position, gestureData.screenPos, 3 * Time.deltaTime);
-//							}
-//							
-//							if(controlMouseCursor)
-//							{
-//								MouseControl.MouseMove(gestureData.screenPos);
-//							}
-//						}
-						
-						foreach(KinectGestures.GestureListenerInterface listener in gestureListeners)
-						{
-							if(listener != null)
-							{
-								listener.GestureInProgress(userId, userIndex, gestureData.gesture, gestureData.progress, 
-								                           (KinectInterop.JointType)gestureData.joint, gestureData.screenPos);
-							}
-						}
-					}
-				}
-			}
-			
-		}
+            // check for gestures
+            foreach (Int64 userId in alUserIds)
+            {
+                if (!playerGesturesData.ContainsKey(userId))
+                    continue;
 
-        /**********************************************************************************************************************/
-        /**********************************************************************************************************************/
+                // Check for player's gestures
+                CheckForGestures(userId);
+
+                // Check for complete gestures
+                List<KinectGestures.GestureData> gesturesData = playerGesturesData[userId];
+                int userIndex = GetUserIndexById(userId);
+
+                foreach (KinectGestures.GestureData gestureData in gesturesData)
+                {
+                    if (gestureData.complete)
+                    {
+                        foreach (KinectGestures.GestureListenerInterface listener in gestureListeners)
+                        {
+                            if (listener != null && listener.GestureCompleted(userId, userIndex, gestureData.gesture, (KinectInterop.JointType)gestureData.joint, gestureData.screenPos))
+                            {
+                                ResetPlayerGestures(userId);
+                            }
+                        }
+                    }
+                    else if (gestureData.cancelled)
+                    {
+                        foreach (KinectGestures.GestureListenerInterface listener in gestureListeners)
+                        {
+                            if (listener != null && listener.GestureCancelled(userId, userIndex, gestureData.gesture, (KinectInterop.JointType)gestureData.joint))
+                            {
+                                ResetGesture(userId, gestureData.gesture);
+                            }
+                        }
+                    }
+                    else if (gestureData.progress >= 0.1f)
+                    {
+                        foreach (KinectGestures.GestureListenerInterface listener in gestureListeners)
+                        {
+                            if (listener != null)
+                            {
+                                listener.GestureInProgress(userId, userIndex, gestureData.gesture, gestureData.progress,
+                                                           (KinectInterop.JointType)gestureData.joint, gestureData.screenPos);
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        #region LIRONGJIA
         // exit update if player cannot move or game is paused
         if (!playerCanMove || (Time.timeScale == 0f))
             return;
@@ -2626,8 +2601,6 @@ public class KinectManager : MonoBehaviour
             canDoubleJump = true;
         }
 
-        //if()
-
         if (isGrounded && Input.GetButtonDown("Jump"))
         { // If grounded AND jump button pressed, then allow the player to jump
             DoJump();
@@ -2653,12 +2626,13 @@ public class KinectManager : MonoBehaviour
         //        }
         //    }
         //}
-            // If the player stops jumping mid jump and player is not yet falling
-            // then set the vertical velocity to 0 (he will start to fall from gravity)
-            if (Input.GetButtonUp("Jump") && _vy > 0f)
-            {
-                _vy = 0f;
-            }
+
+        // If the player stops jumping mid jump and player is not yet falling
+        // then set the vertical velocity to 0 (he will start to fall from gravity)
+        if (Input.GetButtonUp("Jump") && _vy > 0f)
+        {
+            _vy = 0f;
+        }
 
         // Change the actual velocity on the rigidbody
         _rigidbody.velocity = new Vector2(_vx * moveSpeed, _vy);
@@ -2667,8 +2641,8 @@ public class KinectManager : MonoBehaviour
         // this allows the player to jump up through things on the platform layer
         // NOTE: requires the platforms to be on a layer named "Platform"
         Physics2D.IgnoreLayerCollision(_playerLayer, _platformLayer, (_vy > 0.0f));
-        /**********************************************************************************************************************/
-        /**********************************************************************************************************************/
+
+        #endregion LIRONGJIA
     }
 
     void LateUpdate()
@@ -4279,7 +4253,7 @@ public class KinectManager : MonoBehaviour
     }
 
     // do Jump
-    void DoJump()
+    public void DoJump()
     {
         // reset current vertical motion to 0 prior to jump
         _vy = 0f;

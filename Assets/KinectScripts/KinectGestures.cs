@@ -41,16 +41,29 @@ public class KinectGestures : MonoBehaviour
 		void GestureInProgress(long userId, int userIndex, Gestures gesture, float progress, 
 		                       KinectInterop.JointType joint, Vector3 screenPos);
 
-		/// <summary>
-		/// Invoked if a gesture is completed.
+        /// <summary>
+		/// Invoked when a gesture is in progress.
 		/// </summary>
-		/// <returns><c>true</c>, if the gesture detection must be restarted, <c>false</c> otherwise.</returns>
+		/// <param name="manager">Kinect Manager</param>
 		/// <param name="userId">User ID</param>
 		/// <param name="userIndex">User index</param>
 		/// <param name="gesture">Gesture type</param>
+		/// <param name="progress">Gesture progress [0..1]</param>
 		/// <param name="joint">Joint type</param>
 		/// <param name="screenPos">Normalized viewport position</param>
-		bool GestureCompleted(long userId, int userIndex, Gestures gesture,
+		void GestureInProgress(KinectManager manager, long userId, int userIndex, Gestures gesture, float progress,
+                               KinectInterop.JointType joint, Vector3 screenPos);
+
+        /// <summary>
+        /// Invoked if a gesture is completed.
+        /// </summary>
+        /// <returns><c>true</c>, if the gesture detection must be restarted, <c>false</c> otherwise.</returns>
+        /// <param name="userId">User ID</param>
+        /// <param name="userIndex">User index</param>
+        /// <param name="gesture">Gesture type</param>
+        /// <param name="joint">Joint type</param>
+        /// <param name="screenPos">Normalized viewport position</param>
+        bool GestureCompleted(long userId, int userIndex, Gestures gesture,
 		                      KinectInterop.JointType joint, Vector3 screenPos);
 
         /// <summary>
@@ -76,7 +89,18 @@ public class KinectGestures : MonoBehaviour
         /// <param name="joint">Joint type</param>
         bool GestureCancelled(long userId, int userIndex, Gestures gesture, 
 		                      KinectInterop.JointType joint);
-	}
+
+        /// <summary>
+        /// Invoked if a gesture is cancelled.
+        /// </summary>
+        /// <returns><c>true</c>, if the gesture detection must be retarted, <c>false</c> otherwise.</returns>
+        /// <param name="userId">User ID</param>
+        /// <param name="userIndex">User index</param>
+        /// <param name="gesture">Gesture type</param>
+        /// <param name="joint">Joint type</param>
+        bool GestureCancelled(KinectManager manager, long userId, int userIndex, Gestures gesture,
+                              KinectInterop.JointType joint);
+    }
 	
 
 	/// <summary>

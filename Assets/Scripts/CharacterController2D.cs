@@ -56,26 +56,6 @@ public class CharacterController2D : MonoBehaviour {
 	// number of layer that Platforms are on (setup in Awake)
 	int _platformLayer;
 
-    /**********************************************************************************************************************/
-    public int playerIndex = 0;
-	public GUIText gestureInfo;
-
-    public void DetectUser(long userId, int userIndex)
-    {
-        if (userIndex != playerIndex)
-            return;
-
-        // kinect manager
-        KinectManager manager = KinectManager.Instance;
-        manager.DetectGesture(userId, KinectGestures.Gestures.Jump);
-
-        if (gestureInfo != null)
-        {
-            gestureInfo.text = "Swipe, Jump, Squat or Lean.";
-        }
-    }
-    /**********************************************************************************************************************/
-
     void Awake () {
 		// get a reference to the components we are going to be changing and store a reference for efficiency purposes
 		_transform = GetComponent<Transform> ();

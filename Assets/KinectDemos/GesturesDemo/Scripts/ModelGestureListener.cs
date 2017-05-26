@@ -310,4 +310,12 @@ public class ModelGestureListener : MonoBehaviour, KinectGestures.GestureListene
     {
         throw new NotImplementedException();
     }
+
+    public void GestureInProgress(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture, float progress, KinectInterop.JointType joint, Vector3 screenPos) {
+        throw new NotImplementedException();
+    }
+
+    public bool GestureCancelled(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint) {
+        throw new NotImplementedException();
+    }
 }

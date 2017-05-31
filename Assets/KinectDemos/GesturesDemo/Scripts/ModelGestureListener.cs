@@ -318,4 +318,8 @@ public class ModelGestureListener : MonoBehaviour, KinectGestures.GestureListene
     public bool GestureCancelled(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint) {
         throw new NotImplementedException();
     }
+
+    public void UserLost(KinectManager manager, long userId, int userIndex) {
+        throw new NotImplementedException();
+    }
 }

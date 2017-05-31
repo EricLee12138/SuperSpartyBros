@@ -32,9 +32,11 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
         }
     }
 
-    public void UserLost(long userId, int userIndex) {
+    public void UserLost(KinectManager manager, long userId, int userIndex) {
         if (userIndex != playerIndex)
             return;
+
+        //manager.VX = 0;
 
         if (gestureInfo != null) {
             gestureInfo.text = string.Empty;
@@ -60,17 +62,13 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
                 string sGestureText = string.Format("{0} - {1:F0} degrees", gesture, screenPos.z);
                 gestureInfo.text = sGestureText;
 
-                //if (manager.IsGrounded && gesture == KinectGestures.Gestures.LeanRight) {
-                //    manager.DoJump();
-                //}
-
-                //if (gesture == KinectGestures.Gestures.LeanLeft) {
-                //    manager.VX = -1;
-                //}else if(gesture == KinectGestures.Gestures.LeanRight) {
-                //    manager.VX = 1;
-                //} else {
-                //    manager.VX = 0;
-                //}
+                if (gesture == KinectGestures.Gestures.LeanLeft) {
+                    manager.VX = -1;
+                } else if (gesture == KinectGestures.Gestures.LeanRight) {
+                    manager.VX = 1;
+                } else {
+                    manager.VX = 0;
+                }
 
                 progressDisplayed = true;
                 progressGestureTime = Time.realtimeSinceStartup;
@@ -152,6 +150,10 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
     }
 
     public bool GestureCancelled(long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint) {
+        throw new NotImplementedException();
+    }
+
+    public void UserLost(long userId, int userIndex) {
         throw new NotImplementedException();
     }
 }

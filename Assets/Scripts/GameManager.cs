@@ -162,7 +162,7 @@ public class GameManager : MonoBehaviour {
 			// load the gameOver screen
 			SceneManager.LoadScene(levelAfterGameOver);
 		} else { // tell the player to respawn
-			_player.GetComponent<CharacterController2D>().Respawn(_spawnLocation);
+			_player.GetComponent<KinectManager>().Respawn(_spawnLocation);
 		}
 	}
 

@@ -2014,9 +2014,9 @@ public class KinectManager : MonoBehaviour {
 
         kinectInitialized = true;
 
-#if USE_SINGLE_KM_IN_MULTIPLE_SCENES
-        DontDestroyOnLoad(gameObject);
-#endif
+//#if USE_SINGLE_KM_IN_MULTIPLE_SCENES
+//        DontDestroyOnLoad(gameObject);
+//#endif
 
         // GUI Text.
         if (calibrationText != null) {
@@ -3079,7 +3079,7 @@ public class KinectManager : MonoBehaviour {
         // notify all gesture listeners for losing this user
         foreach (KinectGestures.GestureListenerInterface listener in gestureListeners) {
             if (listener != null) {
-                listener.UserLost(userId, uidIndex);
+                listener.UserLost(this, userId, uidIndex);
             }
         }
 
@@ -3778,10 +3778,16 @@ public class KinectManager : MonoBehaviour {
             // After waiting tell the GameManager to reset the game
             yield return new WaitForSeconds(2.0f);
 
+
+
             if (GameManager.gm) // if the gameManager is available, tell it to reset the game
                 GameManager.gm.ResetGame();
             else // otherwise, just reload the current level
+                {
+                KinectInterop.RestartLevel(gameObject, "KM");
+                //StartKinect();
                 SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            }
         }
     }
 

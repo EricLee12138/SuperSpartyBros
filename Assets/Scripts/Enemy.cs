@@ -155,7 +155,7 @@ public class Enemy : MonoBehaviour {
 	{
 		if ((collision.tag == "Player") && !isStunned)
 		{
-			CharacterController2D player = collision.gameObject.GetComponent<CharacterController2D>();
+            KinectManager player = collision.gameObject.GetComponent<KinectManager>();
 			if (player.playerCanMove) {
 				// Make sure the enemy is facing the player on attack
 				Flip(collision.transform.position.x-_transform.position.x);

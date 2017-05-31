@@ -2250,7 +2250,7 @@ public class KinectManager : MonoBehaviour {
                 foreach (KinectGestures.GestureData gestureData in gesturesData) {
                     if (gestureData.complete) {
                         foreach (KinectGestures.GestureListenerInterface listener in gestureListeners) {
-                            if (listener != null && listener.GestureCompleted(userId, userIndex, gestureData.gesture, (KinectInterop.JointType)gestureData.joint, gestureData.screenPos)) {
+                            if (listener != null && listener.GestureCompleted(this, userId, userIndex, gestureData.gesture, (KinectInterop.JointType)gestureData.joint, gestureData.screenPos)) {
                                 ResetPlayerGestures(userId);
                             }
                         }

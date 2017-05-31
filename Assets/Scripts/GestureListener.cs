@@ -22,8 +22,8 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
         KinectManager manager = KinectManager.Instance;
         manager.DetectGesture(userId, KinectGestures.Gestures.Jump);
         manager.DetectGesture(userId, KinectGestures.Gestures.Squat);
-        manager.DetectGesture(userId, KinectGestures.Gestures.LeanLeft);
-        manager.DetectGesture(userId, KinectGestures.Gestures.LeanRight);
+        manager.DetectGesture(userId, KinectGestures.Gestures.RaiseLeftHand);
+        manager.DetectGesture(userId, KinectGestures.Gestures.RaiseRightHand);
 
         manager.DetectGesture(userId, KinectGestures.Gestures.Run);
 
@@ -54,23 +54,24 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
                 progressDisplayed = true;
                 progressGestureTime = Time.realtimeSinceStartup;
             }
-        } else if ((gesture == KinectGestures.Gestures.Wheel || gesture == KinectGestures.Gestures.LeanLeft ||
-                   gesture == KinectGestures.Gestures.LeanRight) && progress > 0.5f) {
+        } else if ((gesture == KinectGestures.Gestures.Wheel || gesture == KinectGestures.Gestures.RaiseLeftHand ||
+                   gesture == KinectGestures.Gestures.RaiseRightHand) && progress > 0.5f) {
             if (gestureInfo != null) {
                 string sGestureText = string.Format("{0} - {1:F0} degrees", gesture, screenPos.z);
                 gestureInfo.text = sGestureText;
 
-                //if (manager.IsGrounded && gesture == KinectGestures.Gestures.LeanRight) {
-                //    manager.DoJump();
-                //}
-
-                //if (gesture == KinectGestures.Gestures.LeanLeft) {
-                //    manager.VX = -1;
-                //}else if(gesture == KinectGestures.Gestures.LeanRight) {
-                //    manager.VX = 1;
-                //} else {
-                //    manager.VX = 0;
-                //}
+                if (gesture == KinectGestures.Gestures.RaiseLeftHand)
+                {
+                    manager.VX = -1;
+                }
+                else if (gesture == KinectGestures.Gestures.RaiseRightHand)
+                {
+                    manager.VX = 1;
+                }
+                else
+                {
+                    manager.VX = 0;
+                }
 
                 progressDisplayed = true;
                 progressGestureTime = Time.realtimeSinceStartup;
@@ -99,11 +100,6 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
         if (manager.IsGrounded && gesture == KinectGestures.Gestures.Jump) {
             manager.DoJump();
         }
-        if(gesture == KinectGestures.Gestures.LeanLeft) {
-            manager.IsRunning = true;
-        }
-
-        if(manager.IsGrounded)
 
         if (gestureInfo != null) {
             gestureInfo.text = sGestureText;

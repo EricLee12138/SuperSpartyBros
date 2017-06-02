@@ -59,6 +59,7 @@ public class KinectManager : MonoBehaviour {
     bool isGrounded = false;
     bool isRunning = false;
     bool canDoubleJump = false;
+    bool isSquating = false;
 
     // store the layer the player is on (setup in Awake)
     int _playerLayer;
@@ -2279,13 +2280,17 @@ public class KinectManager : MonoBehaviour {
             return;
 
         // determine horizontal velocity change based on the horizontal input
-        //_vx = Input.GetAxisRaw("Horizontal");
+        _vx = Input.GetAxisRaw("Horizontal");
 
         // Determine if running based on the horizontal movement
-        if (_vx != 0) {
+        if (_vx != 0 && !isSquating) {
             isRunning = true;
         } else {
             isRunning = false;
+        }
+
+        if (isSquating) {
+            _vx = 0;
         }
 
         // set the running animation state
@@ -2306,9 +2311,9 @@ public class KinectManager : MonoBehaviour {
             canDoubleJump = true;
         }
 
-        if (isGrounded && Input.GetButtonDown("Jump")) { // If grounded AND jump button pressed, then allow the player to jump
+        if (isGrounded && Input.GetButtonDown("Jump") && !isSquating) { // If grounded AND jump button pressed, then allow the player to jump
             DoJump();
-        } else if (canDoubleJump && Input.GetButtonDown("Jump")) {
+        } else if (canDoubleJump && Input.GetButtonDown("Jump") && !isSquating) {
             DoJump();
             canDoubleJump = false;
         }
@@ -2318,6 +2323,17 @@ public class KinectManager : MonoBehaviour {
         if (Input.GetButtonUp("Jump") && _vy > 0f) {
             _vy = 0f;
         }
+
+        if (isGrounded && Input.GetButtonDown("Squat")) {
+            isSquating = true;
+        }
+
+        if (Input.GetButtonUp("Squat")) {
+            isSquating = false;
+        }
+
+        _animator.SetBool("Squating", isSquating);
+
 
         // Change the actual velocity on the rigidbody
         _rigidbody.velocity = new Vector2(_vx * moveSpeed, _vy);
@@ -3721,6 +3737,7 @@ public class KinectManager : MonoBehaviour {
     // do what needs to be done to freeze the player
     void FreezeMotion() {
         playerCanMove = false;
+        _rigidbody.Sleep();
         _rigidbody.isKinematic = true;
     }
 

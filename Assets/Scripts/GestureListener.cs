@@ -36,10 +36,10 @@ public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInte
         if (userIndex != playerIndex)
             return;
 
-        //manager.VX = 0;
+        manager.VX = 0;
 
         if (gestureInfo != null) {
-            gestureInfo.text = string.Empty;
+            gestureInfo.text = "User lost. Please adjust your position or direction.";
         }
     }
 

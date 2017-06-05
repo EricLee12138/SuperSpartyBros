@@ -1,8 +1,10 @@
-﻿<Properties StartupItem="SuperSpartyBros.Plugins.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\CharacterController2D.cs">
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\GestureListener.cs">
     <Files>
-      <File FileName="Assets\Scripts\CharacterController2D.cs" Line="129" Column="2" />
+      <File FileName="Assets\Scripts\GestureListener.cs" Line="96" Column="36" />
+      <File FileName="Assets\Scripts\CharacterController2D.cs" Line="1" Column="1" />
+      <File FileName="Assets\KinectScripts\KinectManager.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

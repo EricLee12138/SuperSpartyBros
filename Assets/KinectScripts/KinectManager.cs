@@ -2251,7 +2251,7 @@ public class KinectManager : MonoBehaviour {
                 foreach (KinectGestures.GestureData gestureData in gesturesData) {
                     if (gestureData.complete) {
                         foreach (KinectGestures.GestureListenerInterface listener in gestureListeners) {
-                            if (listener != null && listener.GestureCompleted(userId, userIndex, gestureData.gesture, (KinectInterop.JointType)gestureData.joint, gestureData.screenPos)) {
+                            if (listener != null && listener.GestureCompleted(this, userId, userIndex, gestureData.gesture, (KinectInterop.JointType)gestureData.joint, gestureData.screenPos)) {
                                 ResetPlayerGestures(userId);
                             }
                         }
@@ -2280,7 +2280,7 @@ public class KinectManager : MonoBehaviour {
             return;
 
         // determine horizontal velocity change based on the horizontal input
-        _vx = Input.GetAxisRaw("Horizontal");
+        //_vx = Input.GetAxisRaw("Horizontal");
 
         // Determine if running based on the horizontal movement
         if (_vx != 0 && !isSquating) {

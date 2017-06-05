@@ -28,17 +28,25 @@ public class KinectGestures : MonoBehaviour
 		/// <param name="userId">User ID</param>
 		/// <param name="userIndex">User index</param>
 		void UserLost(long userId, int userIndex);
-		
-		/// <summary>
-		/// Invoked when a gesture is in progress.
-		/// </summary>
-		/// <param name="userId">User ID</param>
-		/// <param name="userIndex">User index</param>
-		/// <param name="gesture">Gesture type</param>
-		/// <param name="progress">Gesture progress [0..1]</param>
-		/// <param name="joint">Joint type</param>
-		/// <param name="screenPos">Normalized viewport position</param>
-		void GestureInProgress(long userId, int userIndex, Gestures gesture, float progress, 
+
+        /// <summary>
+        /// Invoked when a user gets lost. All tracked gestures for this user are cleared automatically.
+        /// </summary>
+		/// <param name="manager">Kinect Manager</param>
+        /// <param name="userId">User ID</param>
+        /// <param name="userIndex">User index</param>
+        void UserLost(KinectManager manager, long userId, int userIndex);
+
+        /// <summary>
+        /// Invoked when a gesture is in progress.
+        /// </summary>
+        /// <param name="userId">User ID</param>
+        /// <param name="userIndex">User index</param>
+        /// <param name="gesture">Gesture type</param>
+        /// <param name="progress">Gesture progress [0..1]</param>
+        /// <param name="joint">Joint type</param>
+        /// <param name="screenPos">Normalized viewport position</param>
+        void GestureInProgress(long userId, int userIndex, Gestures gesture, float progress, 
 		                       KinectInterop.JointType joint, Vector3 screenPos);
 
         /// <summary>

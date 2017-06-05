@@ -4,150 +4,158 @@ using System;
 
 
 public class GestureListener : MonoBehaviour, KinectGestures.GestureListenerInterface {
-    [Tooltip("Index of the player, tracked by this component. 0 means the 1st player, 1 - the 2nd one, 2 - the 3rd one, etc.")]
-    public int playerIndex = 0;
+	[Tooltip("Index of the player, tracked by this component. 0 means the 1st player, 1 - the 2nd one, 2 - the 3rd one, etc.")]
+	public int playerIndex = 0;
 
-    [Tooltip("GUI-Text to display gesture-listener messages and gesture information.")]
-    public GUIText gestureInfo;
+	[Tooltip("GUI-Text to display gesture-listener messages and gesture information.")]
+	public GUIText gestureInfo;
 
-    // private bool to track if progress message has been displayed
-    private bool progressDisplayed;
-    private float progressGestureTime;
+	// private bool to track if progress message has been displayed
+	private bool progressDisplayed;
+	private float progressGestureTime;
 
-    public void UserDetected(long userId, int userIndex) {
-        if (userIndex != playerIndex)
-            return;
+	public void UserDetected(long userId, int userIndex) {
+		if (userIndex != playerIndex)
+			return;
 
-        // as an example - detect these user specific gestures
-        KinectManager manager = KinectManager.Instance;
-        manager.DetectGesture(userId, KinectGestures.Gestures.Jump);
-        manager.DetectGesture(userId, KinectGestures.Gestures.Squat);
-        manager.DetectGesture(userId, KinectGestures.Gestures.RaiseLeftHand);
-        manager.DetectGesture(userId, KinectGestures.Gestures.RaiseRightHand);
+		// as an example - detect these user specific gestures
+		KinectManager manager = KinectManager.Instance;
+		manager.DetectGesture(userId, KinectGestures.Gestures.Jump);
+		manager.DetectGesture(userId, KinectGestures.Gestures.Squat);
+		manager.DetectGesture(userId, KinectGestures.Gestures.RaiseLeftHand);
+		manager.DetectGesture(userId, KinectGestures.Gestures.RaiseRightHand);
 
-        manager.DetectGesture(userId, KinectGestures.Gestures.Run);
+		manager.DetectGesture(userId, KinectGestures.Gestures.Run);
 
-        if (gestureInfo != null) {
-            gestureInfo.text = "Swipe, Jump, Squat or Lean.";
-        }
-    }
+		if (gestureInfo != null) {
+			gestureInfo.text = "Swipe, Jump, Squat or Lean.";
+		}
+	}
 
-    public void UserLost(long userId, int userIndex) {
-        if (userIndex != playerIndex)
-            return;
+	public void UserLost(KinectManager manager, long userId, int userIndex) {
+		if (userIndex != playerIndex)
+			return;
 
-        if (gestureInfo != null) {
-            gestureInfo.text = string.Empty;
-        }
-    }
+		//		manager.VX = 0;
 
-    public void GestureInProgress(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture,
-                                  float progress, KinectInterop.JointType joint, Vector3 screenPos) {
-        if (userIndex != playerIndex)
-            return;
+		if (gestureInfo != null) {
+			gestureInfo.text = "User lost. Please adjust your position or direction.";
+		}
+	}
 
-        if ((gesture == KinectGestures.Gestures.ZoomOut || gesture == KinectGestures.Gestures.ZoomIn) && progress > 0.5f) {
-            if (gestureInfo != null) {
-                string sGestureText = string.Format("{0} - {1:F0}%", gesture, screenPos.z * 100f);
-                gestureInfo.text = sGestureText;
+	public void GestureInProgress(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture,
+		float progress, KinectInterop.JointType joint, Vector3 screenPos) {
+		if (userIndex != playerIndex)
+			return;
 
-                progressDisplayed = true;
-                progressGestureTime = Time.realtimeSinceStartup;
-            }
-        } else if ((gesture == KinectGestures.Gestures.Wheel || gesture == KinectGestures.Gestures.RaiseLeftHand ||
-                   gesture == KinectGestures.Gestures.RaiseRightHand) && progress > 0.5f) {
-            if (gestureInfo != null) {
-                string sGestureText = string.Format("{0} - {1:F0} degrees", gesture, screenPos.z);
-                gestureInfo.text = sGestureText;
+		if ((gesture == KinectGestures.Gestures.ZoomOut || gesture == KinectGestures.Gestures.ZoomIn) && progress > 0.5f) {
+			if (gestureInfo != null) {
+				string sGestureText = string.Format("{0} - {1:F0}%", gesture, screenPos.z * 100f);
+				gestureInfo.text = sGestureText;
 
-                if (gesture == KinectGestures.Gestures.RaiseLeftHand)
-                {
-                    manager.VX = -1;
-                }
-                else if (gesture == KinectGestures.Gestures.RaiseRightHand)
-                {
-                    manager.VX = 1;
-                }
-                else
-                {
-                    manager.VX = 0;
-                }
+				progressDisplayed = true;
+				progressGestureTime = Time.realtimeSinceStartup;
+			}
+		} else if ((gesture == KinectGestures.Gestures.Wheel /*|| gesture == KinectGestures.Gestures.RaiseLeftHand ||
+			gesture == KinectGestures.Gestures.RaiseRightHand*/) && progress > 0.5f) {
+			if (gestureInfo != null) {
+				string sGestureText = gesture + " detected";
+				gestureInfo.text = sGestureText;
 
-                progressDisplayed = true;
-                progressGestureTime = Time.realtimeSinceStartup;
-            }
-        } else if (gesture == KinectGestures.Gestures.Run && progress > 0.5f) {
-            if (gestureInfo != null) {
-                string sGestureText = string.Format("{0} - progress: {1:F0}%", gesture, progress * 100);
-                gestureInfo.text = sGestureText;
+			/*	if (gesture == KinectGestures.Gestures.RaiseLeftHand) {
+					manager.VX = -1;
+				} 
+				else if (gesture == KinectGestures.Gestures.RaiseRightHand) {
+					manager.VX = 1;
+				} else {
+					manager.VX = 0;
+				}*/
 
-                progressDisplayed = true;
-                progressGestureTime = Time.realtimeSinceStartup;
-            }
-        }
-    }
+				progressDisplayed = true;
+				progressGestureTime = Time.realtimeSinceStartup;
+			}
+		} else if (gesture == KinectGestures.Gestures.Run && progress > 0.5f) {
+			if (gestureInfo != null) {
+				string sGestureText = string.Format("{0} - progress: {1:F0}%", gesture, progress * 100);
+				gestureInfo.text = sGestureText;
 
-    public bool GestureCompleted(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture,
-                                  KinectInterop.JointType joint, Vector3 screenPos) {
-        if (userIndex != playerIndex)
-            return false;
+				progressDisplayed = true;
+				progressGestureTime = Time.realtimeSinceStartup;
+			}
+		}
+	}
 
-        if (progressDisplayed)
-            return true;
+	public bool GestureCompleted(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture,
+		KinectInterop.JointType joint, Vector3 screenPos) {
+		if (userIndex != playerIndex)
+			return false;
 
-        string sGestureText = gesture + " detected";
+		if (progressDisplayed)
+			return true;
 
-        if (manager.IsGrounded && gesture == KinectGestures.Gestures.Jump) {
-            manager.DoJump();
-        }
+		string sGestureText = gesture + " detected";
 
-        if (gestureInfo != null) {
-            gestureInfo.text = sGestureText;
-        }
+		if (manager.IsGrounded && gesture == KinectGestures.Gestures.Jump) {
+			manager.DoJump();
+			//manager.VX = 0.5f;
+		}
 
-        return true;
-    }
+		if (gesture == KinectGestures.Gestures.RaiseLeftHand) {
+			manager.VX = -1;
+		} 
+		else if (gesture == KinectGestures.Gestures.RaiseRightHand) {
+			manager.VX = 1;
+		}
 
-    public bool GestureCancelled(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture,
-                                  KinectInterop.JointType joint) {
-        if (userIndex != playerIndex)
-            return false;
+		if (gestureInfo != null) {
+			gestureInfo.text = sGestureText;
+		}
 
-        manager.VX = 0;
+		return true;
+	}
 
-        if (progressDisplayed) {
-            progressDisplayed = false;
+	public bool GestureCancelled(KinectManager manager, long userId, int userIndex, KinectGestures.Gestures gesture,
+		KinectInterop.JointType joint) {
+		if (userIndex != playerIndex)
+			return false;
+		manager.VX = 0;
+		if (progressDisplayed) {
+			progressDisplayed = false;
 
-            if (gestureInfo != null) {
-                gestureInfo.text = String.Empty;
-            }
-        }
+			if (gestureInfo != null) {
+				gestureInfo.text = String.Empty;
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    public void Update() {
-        if (progressDisplayed && ((Time.realtimeSinceStartup - progressGestureTime) > 2f)) {
-            progressDisplayed = false;
+	public void Update() {
+		if (progressDisplayed && ((Time.realtimeSinceStartup - progressGestureTime) > 2f)) {
+			progressDisplayed = false;
 
-            if (gestureInfo != null) {
-                gestureInfo.text = String.Empty;
-            }
+			if (gestureInfo != null) {
+				gestureInfo.text = String.Empty;
+			}
 
-            Debug.Log("Forced progress to end.");
-        }
-    }
+			Debug.Log("Forced progress to end.");
+		}
+	}
 
-    public bool GestureCompleted(long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint, Vector3 screenPos) {
-        //throw new NotImplementedException();
-        return true;
-    }
+	public bool GestureCompleted(long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint, Vector3 screenPos) {
+		//throw new NotImplementedException();
+		return true;
+	}
 
-    public void GestureInProgress(long userId, int userIndex, KinectGestures.Gestures gesture, float progress, KinectInterop.JointType joint, Vector3 screenPos) {
-        throw new NotImplementedException();
-    }
+	public void GestureInProgress(long userId, int userIndex, KinectGestures.Gestures gesture, float progress, KinectInterop.JointType joint, Vector3 screenPos) {
+		throw new NotImplementedException();
+	}
 
-    public bool GestureCancelled(long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint) {
-        throw new NotImplementedException();
-    }
+	public bool GestureCancelled(long userId, int userIndex, KinectGestures.Gestures gesture, KinectInterop.JointType joint) {
+		throw new NotImplementedException();
+	}
+
+	public void UserLost(long userId, int userIndex) {
+		throw new NotImplementedException();
+	}
 }
